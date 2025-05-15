@@ -7,6 +7,7 @@ import com.study.comparator.annotation.DisplayName;
 
 @DtoObserver
 public class ClienteDTO {
+	
     @DisplayName("Nome do Cliente")
     private String nome;
     
