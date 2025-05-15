@@ -1,7 +1,9 @@
 package com.study.comparator.dto;
 
+import com.study.comparator.annotation.DtoObserver;
 import com.study.comparator.annotation.DisplayName;
 
+@DtoObserver
 public class PropostaDTO {
 	
     private ClienteDTO cliente;

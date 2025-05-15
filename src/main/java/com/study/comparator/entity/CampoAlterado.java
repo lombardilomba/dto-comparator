@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -13,17 +14,18 @@ import jakarta.persistence.Transient;
 public class CampoAlterado {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "campo_monitorado_seq")
+    @SequenceGenerator(name = "campo_monitorado_seq", sequenceName = "seq_campo_monitorado", allocationSize = 1)
     private Long id;
+    
+    @Column(name = "campo", nullable = false)
+    private String path;
     
     @Column(name = "campo_monitorado", nullable = false)
     private boolean campoMonitorado;
     
     @Column(name = "display_name")
     private String displayName;
-    
-    @Transient
-    private String path;
     
     @Transient
     private Object valorAntes;
