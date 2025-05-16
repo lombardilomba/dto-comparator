@@ -1,10 +1,10 @@
-package com.study.comparator.annotation;
+package dev.llombardi.comparator.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Anotação para definir que a Classe faz parte do fluxo de um fluxo Critico.
+ * Annotation to indicate that the class is part of a critical flow.
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DtoObserver {

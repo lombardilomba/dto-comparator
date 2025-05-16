@@ -1,47 +1,54 @@
-name: Detectar categorias de anotações em classes Java modificadas
+name: Detect critical annotations in modified Java classes
 
 on:
   pull_request:
 
 jobs:
-  verificar-categorias-anotacoes:
+  check-critical-annotations:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+
     steps:
-      - name: Checkout do código
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Detectar anotações críticas
-        id: anotacoes
+      - name: Detect critical annotations
+        id: annotations
         run: |
           git fetch origin ${{ github.base_ref }}
-          arquivos=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.java$' || true)
+          files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.java$' || true)
 
-          mensagem=""
-          for arquivo in $arquivos; do
-            if grep -q '@DtoObserver' "$arquivo"; then
-              echo "::warning file=$arquivo::[⚠️ Crítico] Esta classe contém @DtoObserver. Verifique se há impacto no fluxo"
-              mensagem+="🚨 Arquivo $arquivo contém @DtoObserver\n"
+          message=""
+          found_annotation=false
+
+          for file in $files; do
+            if grep -q '@DtoObserver' "$file"; then
+              echo "::warning file=$file::[⚠️ Critical] This class contains @DtoObserver. Review its impact on the flow."
+              message+="🚨 File $file contains @DtoObserver\n"
+              found_annotation=true
             fi
           done
 
-          echo "mensagem<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$mensagem" >> $GITHUB_OUTPUT
+          if [ "$found_annotation" = true ]; then
+            message+="\n⚠️ Attention: One or more files contain @DtoObserver. Please check for data flow impacts.\n"
+          fi
+
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$message" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-              
-      - name: Comentar no PR se houver anotação crítica
-        if: steps.anotacoes.outputs.mensagem != ''
+      - name: Comment on PR if critical annotation found
+        if: steps.annotations.outputs.message != ''
         uses: actions/github-script@v7
         with:
           script: |
             const msg = [
-              '### ⚠️ Anotações críticas detectadas:',
+              '### ⚠️ Critical annotations detected:',
               '',
-              process.env.MENSAGEM
+              process.env.MESSAGE
             ].join('\n');
 
             await github.rest.issues.createComment({
@@ -51,4 +58,4 @@ jobs:
               body: msg
             });
         env:
-          MENSAGEM: ${{ steps.anotacoes.outputs.mensagem }}
+          MESSAGE: ${{ steps.annotations.outputs.message }}
