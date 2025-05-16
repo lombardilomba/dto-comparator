@@ -1,0 +1,51 @@
+# Compiled class files
+*.class
+
+# Maven build directory
+/target/
+/build/
+
+# Eclipse metadata
+.project
+.classpath
+.settings/
+
+# IntelliJ IDEA
+.idea/
+/*.iml
+/*.iws
+
+# VS Code settings
+.vscode/
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven wrapper files (se não quiser versionar)
+/mvnw
+/mvnw.cmd
+/.mvn/
+
+# Generated JARs, wars, etc.
+/*.jar
+/*.war
+/*.nar
+/*.ear
+/*.zip
+/*.tar.gz
+
+# Manifest
+MANIFEST.MF
+
+# Scripts build/cache (se aplicável)
+/script/build/
+/script/cache/
+
+# Outros arquivos de configuração ou diretórios temporários que não devem ser versionados
